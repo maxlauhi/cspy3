@@ -13,11 +13,12 @@ def luhn(n):
         return n
     else:
         all_but_last, last = split(n)
-        return all_but_last + digit_double_update(last)
+        return digit_double_update(all_but_last) + last
 
 def digit_double_update(n):
-    two_digits = 2 * n
-    if two_digits < 10:
-        return two_digits
+    all_but_last, last = split(n)
+    sum_even = sum_digits(2 * last)
+    if n < 10:
+        return sum_even
     else:
-        return sum_digits(two_digits)
+        return luhn(all_but_last) + sum_even
