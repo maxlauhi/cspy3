@@ -7,12 +7,12 @@ def mul_rationals(x, y):
     return rational(numer(x) * numer(y), denom(x) * denom(y))
 
 def print_rational(x):
-    print(number(x), '/', denom(x))
+    print(numer(x), '/', denom(x))
 
 def rationals_are_equal(x, y):
     return numer(x) * denom(y) == numer(y) * denom(x)
 
-def ratioan(n, d):
+def rational(n, d):
     return [n, d]
 
 def numer(x):
