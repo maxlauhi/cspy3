@@ -53,3 +53,12 @@ def print_parts(tree, partition=[]):
             m = str(label(tree))
             print_parts(left, partition + [m])
             print_parts(right, partition)
+
+def right_binarize(tree):
+    """Construct a right-branching binary tree."""
+    if is_leaf(tree):
+        return tree
+    if len(tree) > 2:
+        tree = [tree[0], tree[1:]]
+    return [right_binarize(b) for b in tree]
+
