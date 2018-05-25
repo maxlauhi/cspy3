@@ -1,4 +1,5 @@
 empty = 'empty'
+four = link(1, link(2, link(3, link(4, empty))))
 def is_link(s):
     """s is a linkd list if it is empty or a (first, rest) pair."""
     return s == empty or (len(s) == 2 and  is_link(s[1]))
@@ -31,3 +32,15 @@ def getitem_link(s, i):
     while i > 0:
         s, i = rest(s), i - 1
     return first(s)
+
+def len_link_recursive(s):
+    """Return the length of a linked list s."""
+    if s == empty:
+        return 0
+    return 1 + len_link_recursive(rest(s))
+
+def getitem_link_recursive(s, i):
+    """Return the element at index i of linked list s."""
+    if i == 0:
+        return first(s)
+    return getitem_link_recursive(rest(s), i -1)
