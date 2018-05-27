@@ -1,5 +1,5 @@
 empty = 'empty'
-four = link(1, link(2, link(3, link(4, empty))))
+four = [1, [2, [3, [4, 'empty']]]]
 def is_link(s):
     """s is a linkd list if it is empty or a (first, rest) pair."""
     return s == empty or (len(s) == 2 and  is_link(s[1]))
@@ -44,3 +44,19 @@ def getitem_link_recursive(s, i):
     if i == 0:
         return first(s)
     return getitem_link_recursive(rest(s), i -1)
+
+def extend_link(s, t):
+    """Return a list with the elements of s followed by those of t."""
+    assert is_link(s) and is_link(t)
+    if s == empty:
+        return t
+    else:
+        return link(first(s), extend_link(rest(s), t))
+
+def apply_to_all_link(f, s):
+    """Apply f to each element of s."""
+    assert is_link(s)
+    if s == empty:
+        return s
+    else:
+        return link(f(first(s)), apply_to_all_link(f, rest(s)))
