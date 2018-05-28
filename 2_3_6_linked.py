@@ -1,5 +1,6 @@
 empty = 'empty'
 four = [1, [2, [3, [4, 'empty']]]]
+
 def is_link(s):
     """s is a linkd list if it is empty or a (first, rest) pair."""
     return s == empty or (len(s) == 2 and  is_link(s[1]))
@@ -60,3 +61,43 @@ def apply_to_all_link(f, s):
         return s
     else:
         return link(f(first(s)), apply_to_all_link(f, rest(s)))
+
+def keep_if_link(f, s):
+    """Return a list with elements of s for which f(e) is true."""
+    assert is_link(s)
+    if s == empty:
+        return s
+    else:
+        kept = keep_if_link(f, rest(s))
+        if f(first(s)):
+            return link(first(s), kept)
+        else:
+            return kept
+
+def join_link(s, separator):
+    """Return a string of all elements in s separated by separator."""
+    if s == empty:
+        return ""
+    elif rest(s) == empty:
+        return str(first(s))
+    else:
+        return str(first(s)) + separator + join_link(rest(s), separator)
+
+def partitions(n, m):
+    """Return a linked list of partitions of n using parts of up to m.
+    Each partition is represented as a linked list.
+    """
+    if n == 0:
+        return link(empty, empty) # A list containing the empty partition
+    elif n < 0 or m == 0:
+        return empty
+    else:
+        using_m = partitions(n-m, m)
+        with_m = apply_to_all_link(lambda s: link(m, s), using_m)
+        without_m = partitions(n, m-1)
+        return extend_link(with_m, without_m)
+
+def print_partitions(n, m):
+    lists = partitions(n, m)
+    strings = apply_to_all_link(lambda s: join_link(s, " + "), lists)
+    print(join_link(strings, "\n"))
