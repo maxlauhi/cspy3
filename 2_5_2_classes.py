@@ -15,8 +15,17 @@ class Account:
         self.balance = self.balance - amount
         return self.balance
 class CheckingAccount(Account):
-    """A bank account chage of withdrawals"""
-    withdraw_chage = 1
+    """A bank account charge of withdrawals"""
+    withdraw_charge = 1
     interest = 0.01
     def withdraw(self, amount):
-        return Account.withdraw(self,amount + self.withdraw_chage)
+        return Account.withdraw(self,amount + self.withdraw_charge)
+class SavingsAccount(Account):
+    """A bank account charge of deposit"""
+    deposit_charge = 2
+    def deposit(self, amount):
+        return Account.deposit(self, amount - self.deposit_charge)
+class AsSeemOnTVAccount(CheckingAccount, SavingsAccount):
+    def __init__(self, account_holder):
+        self.holder = account_holder
+        self.balance = 1
