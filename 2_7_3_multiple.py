@@ -1,12 +1,45 @@
 from math import atan2, sin, cos, pi
 from fractions import gcd
 
-class Number:
-    def __add__(self, other):
-        return self.add(other)
-    def __mul__(self, other):
-        return self.mul(other)
+def add_complex_and_rational(c, r):
+    return ComplexRI(c.real + r.numer/r.denom, c.imag)
 
+def mul_complex_and_rational(c, r):
+    r_magnitude, r_angle = r.numer/r.denom, 0
+    if r_magnitude < 0:
+        r_magnitude, r_angle = -r_magnitude, pi
+    return ComplexMA(c.magnitude * r_magnitude, c.angle + r_angle)
+
+def add_rational_and_complex(r, c):
+    return add_complex_and_rational(c, r)
+
+def mul_rational_and_complex(r, c):
+    return mul_complex_and_rational(c, r)
+
+class Number:
+    """
+    initialize type_tags:
+    >>> Rational.type_tag = 'rat'
+    >>> Complex.type_tag = 'com'
+    """
+    def __add__(self, other):
+        if self.type_tag == other.type_tag:
+            return self.add(other)
+        elif (self.type_tag, other.type_tag) in self.adders:
+            return self.cross_apply(other, self.adders)
+    def __mul__(self, other):
+        if self.type_tag == other.type_tag:
+            return self.mul(other)
+        elif (self.type_tag, other.type_tag) in self.multipliers:
+            return self.cross_apply(other, self.multipliers)
+    def cross_apply(self, other, cross_fns):
+        cross_fn = cross_fns[(self.type_tag, other.type_tag)]
+        return cross_fn(self, other)
+    adders = {("com", "rat"): add_complex_and_rational,
+              ("rat", "com"): add_rational_and_complex}
+    multipliers = {("com", "rat"): mul_complex_and_rational,
+                   ("rat","com"): mul_rational_and_complex}
+    
 class Complex(Number):
     def add(self, other):
         return ComplexRI(self.real + other.real, self.imag + other.imag)
